@@ -1,0 +1,177 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Arcaea Offline - Score</title>
+</head>
+<link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+<link rel="stylesheet" type="text/css" href="/style/sidebar.css">
+<style>
+    body {
+        height: 100vh;
+        margin: 0px;
+        padding: 0px;
+        background-image: url('/assets/others/bg.jpg');
+        background-size: contain;
+        color: white;
+    }
+    header {
+        position: absolute;
+        top: 0px;
+        margin: 0px;
+        width: 100%;
+        display: flex;
+        flex-direction: row;
+        justify-content: end;
+        align-items: center;
+        background-color: rgba(0, 0, 0, 0.5);
+        z-index: 999;
+    }
+    header h3 {
+        position: absolute;
+        margin: 0px;
+        top: 25px;
+        left: 35px;
+        color: rgb(215, 215, 215);
+        cursor: pointer;
+    }
+    header a{
+        margin: 25px;
+        text-decoration: none;
+        color: rgb(215, 215, 215);
+        font-size: 18px;
+        font-weight: 600;
+        border-radius: 3px;
+        transition: ease color,scale 0.3s;
+        white-space: nowrap;
+    }
+    header a:hover {
+        color: rgb(255, 255, 255);
+        scale: 1.03;
+    }
+    main {
+        position: absolute;
+        top: 0px;
+        width: 100%;
+        height: 100%;
+    }
+    main table{
+        position: relative;
+        width: 100%;
+        margin-top: 100px;
+        background-color: rgba(0, 0, 0, 0.5);
+    }
+    main table th {
+        padding: 15px;
+        margin: 0px;
+    }
+    main table tr{
+        margin: 0px;
+    }
+    main table th {
+        padding: 10px;
+    }
+    main table input {
+        padding: 5px;
+        width: 100px;
+        border-radius: 6px;
+    }
+</style>
+<body>
+    <header>
+        <h3 onclick="window.location.reload()">Arcaea Offline</h3>
+        <a href="/scores">成绩维护 <i class="fa fa-database"></i></a>
+        <a href="/bests">Arcaea Best30 <i class="fa fa-list"></i></a>
+        <a href="/aichan">AI酱 <i class="fa fa-comments-o"></i></a>
+        <a href="/settings">设置 <i class="fa fa-gear"></i></a>
+        <a href="/index">登出 <i class="fa fa-sign-out"></i></a>
+    </header>
+    <div class="sidebar">
+        <div style="height: 55px;"></div>
+        <h3 onclick="window.location.reload()">Arcaea Offline</h3>
+        <a href="/scores">成绩维护 <i class="fa fa-database"></i></a>
+        <a href="/bests">Arcaea Best30 <i class="fa fa-list"></i></a>
+        <a href="/aichan">AI酱 <i class="fa fa-comments-o"></i></a>
+        <a href="/settings">设置 <i class="fa fa-gear"></i></a>
+        <a href="/index">登出 <i class="fa fa-sign-out"></i></a>
+    </div>
+    <main>
+        <table>
+            <tr id="table-header">
+                <th>id</th>
+                <th>曲名</th>
+                <th>曲师</th>
+                <th>分类</th>
+                <th>定数</th>
+                <th>分数</th>
+            </tr>
+        </table>
+    </main>
+</body>
+<script src="/scripts/checkwidth.js"></script>
+<script>
+    function get_chart() {
+        fetch('/get_chart',{
+            method: 'POST'
+        }).then(response => response.json()).then(data => {
+            console.log(data);
+            for (let i = 0; i < data.length; i++) {
+                let tr = document.createElement('tr');
+
+                let th_id = document.createElement('th');
+                let th_name = document.createElement('th');
+                let th_artist = document.createElement('th');
+                let th_difficulty = document.createElement('th');
+                let th_class = document.createElement('th');
+                
+                let th_score = document.createElement('th');
+                
+                th_name.innerText = data[i].title;
+                th_artist.innerText = data[i].artist;
+                th_difficulty.innerText = data[i].difficulty;
+                th_class.innerText = data[i].class;
+                th_id.innerText = data.length-i;
+                
+                let scoreinput = document.createElement('input');
+                scoreinput.value = data[i].score;
+                scoreinput.type = 'number';
+                scoreinput.addEventListener('change', function() {
+                    fetch('/update_chart',{
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            id: data[i].id,
+                            class: data[i].class,
+                            score: this.value
+                        })
+                    }).catch(error => console.log(error));
+                });
+                th_score.appendChild(scoreinput);
+
+                tr.appendChild(th_id);
+                tr.appendChild(th_name);
+                tr.appendChild(th_artist);
+                tr.appendChild(th_class);
+                tr.appendChild(th_difficulty);
+                tr.appendChild(th_score);
+
+                document.getElementById('table-header').insertAdjacentElement('afterend', tr);
+            }
+        }).catch(error => console.log(error));
+    }
+
+    function logout() {
+        fetch('/logout',{
+            method: 'POST'
+        }).then(response => response.json()).then(data => {
+            console.log(data);
+            if (data.status == 'ok') {
+                window.location.href = '/';
+            }
+        }).catch(error => console.log(error));
+    }
+    get_chart();
+</script>
+</html>

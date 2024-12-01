@@ -1,0 +1,297 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Arcaea Offline - Bests</title>
+</head>
+<link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+<link rel="stylesheet" type="text/css" href="/style/sidebar.css">
+<style>
+    body {
+        height: 100vh;
+        margin: 0px;
+        padding: 0px;
+        background-image: url('/assets/others/bg.jpg');
+        background-size: contain;
+        color: white;
+    }
+    header {
+        position: absolute;
+        top: 0px;
+        margin: 0px;
+        width: 100%;
+        height: 75px;
+        display: flex;
+        flex-direction: row;
+        justify-content: end;
+        align-items: center;
+        background-color: rgba(0, 0, 0, 0.5);
+        z-index: 999;
+    }
+    header h3 {
+        position: absolute;
+        margin: 0px;
+        top: 25px;
+        left: 35px;
+        color: rgb(215, 215, 215);
+        cursor: pointer;
+    }
+    header a{
+        margin: 25px;
+        text-decoration: none;
+        color: rgb(215, 215, 215);
+        font-size: 18px;
+        font-weight: 600;
+        border-radius: 3px;
+        transition: ease color,scale 0.3s;
+        white-space: nowrap;
+    }
+    header a:hover {
+        color: rgb(255, 255, 255);
+        scale: 1.03;
+    }
+    main {
+        position: absolute;
+        top: 0px;
+        width: 100%;
+        height: 100%;
+    }
+    main table{
+        position: relative;
+        width: 100%;
+        margin-top: 170px;
+        background-color: rgba(0, 0, 0, 0.5);
+    }
+    main table th {
+        padding: 15px;
+        margin: 0px;
+    }
+    main table tr{
+        margin: 0px;
+    }
+    main table th {
+        padding: 10px;
+    }
+    main table input {
+        padding: 5px;
+        width: 100px;
+        border-radius: 6px;
+    }
+    .user-info {
+        position: absolute;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        width: 100%;
+        height: 95px;
+        top: 75px;
+        font-weight: 600;
+    }
+    .sub-user-info {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+    }
+    main span.avatar {
+        margin: 20px;
+        margin-left: 40px;
+    }
+    main span.avatar img{
+        height: 100%;
+        width: calc(width);
+    }
+    main span.username {
+        font-size: 32px;
+        font-family: 'Courier New', Courier, monospace;
+        overflow-x: hidden;
+    }
+    .rating-info {
+        position: relative;
+        width: 200px;
+        right: 55px;
+        color: rgb(220, 220, 220);
+    }
+    main table{
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+    main table tr{
+        display: flex;
+        flex-direction: row;
+        justify-content: space-evenly;
+        flex-wrap: wrap;
+    }
+    main table th{
+        display: flex;
+        flex-direction: column;
+        border: 1px solid white;
+        margin: 10px;
+        width: 175px;
+        white-space: nowrap;
+        color: rgb(220, 220, 220);
+    }
+    .layer {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-around;
+    }
+    .layer img{
+        width: 55px;
+        border-radius: 50%;
+    }
+    .layer .score{
+        font-size: 20px;
+    }
+    .layer .rating{
+        margin-top: 3px;
+        white-space: nowrap;
+    }
+    .song-name {
+        margin-bottom: 5px;
+        overflow-x: hidden;
+        padding-left: 4px;
+        border-radius: 10px;
+    }
+    .song-score {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+    }
+    .max-potential,.recent-10,.best-30 {
+        white-space: nowrap;
+    }
+</style>
+<body>
+    <header>
+        <h3 onclick="window.location.reload()">Arcaea Offline</h3>
+        <a href="/scores">成绩维护 <i class="fa fa-database"></i></a>
+        <a href="/bests">Arcaea Best30 <i class="fa fa-list"></i></a>
+        <a href="/aichan">AI酱 <i class="fa fa-comments-o"></i></a>
+        <a href="/settings">设置 <i class="fa fa-gear"></i></a>
+        <a href="/index">登出 <i class="fa fa-sign-out"></i></a>
+    </header>
+    <div class="sidebar">
+        <div style="height: 55px;"></div>
+        <h3 onclick="window.location.reload()">Arcaea Offline</h3>
+        <a href="/scores">成绩维护 <i class="fa fa-database"></i></a>
+        <a href="/bests">Arcaea Best30 <i class="fa fa-list"></i></a>
+        <a href="/aichan">AI酱 <i class="fa fa-comments-o"></i></a>
+        <a href="/settings">设置 <i class="fa fa-gear"></i></a>
+        <a href="/index">登出 <i class="fa fa-sign-out"></i></a>
+    </div>
+    <main>
+        <div class="user-info">
+            <div class="sub-user-info">
+                <span class="avatar"><img src="/assets/avatars/0.png" alt=""></span>
+                <span class="username"></span>
+            </div>
+            <div class="rating-info">
+                <div class="max-potential">Max Potential</div>
+                <div class="best-30">Best 30</div>
+                <div class="recent-10">Recent 10</div>
+            </div>
+        </div>
+        <table>
+            <tr>
+            </tr>
+        </table>
+    </main>
+</body>
+<script src="/scripts/checkwidth.js"></script>
+<script>
+    function get_username() {
+        fetch('/username',{
+            method: 'GET'
+        }).then(response => response.json())
+        .then(data => {
+            document.querySelector('.username').textContent = data.username;
+        }).catch(error => console.log(error));
+    }
+    function logout() {
+        fetch('/logout',{
+            method: 'POST'
+        }).then(response => response.json()).then(data => {
+            console.log(data);
+            if (data.status == 'ok') {
+                window.location.href = '/';
+            }
+        }).catch(error => console.log(error));
+    }
+    function get_bests() {
+        fetch('/get_bests',{
+            method: 'GET'
+        }).then(response => response.json())
+        .then(data => {
+            console.log(data);
+            let best30 = 0, recent10 = 0;
+            let tr = document.querySelector('tr');
+            for (let i = 0; i < data.length; i++) {
+                if (data[i].rating == 0){
+                    break;
+                }
+                best30 += data[i].rating;
+                if (i < 10){
+                    recent10 += data[i].rating;
+                }
+                let th = document.createElement('th');
+                style = "";
+                let div1 = document.createElement('div');
+                let div2 = document.createElement('div');
+                div1.innerHTML = `#${i+1} ${data[i].name}`;
+                div1.classList.add('song-name');
+                div1.style.textAlign = "left";
+                switch (data[i].class) {
+                    case "Past":{
+                        div1.style.background = `linear-gradient(to right, #0077ff, #000000)`;
+                        break;
+                    }
+                    case "Present":{
+                        div1.style.background = `linear-gradient(to right, #01b73a, #000000)`;
+                        break;
+                    }
+                    case "Future":{
+                        div1.style.background = `linear-gradient(to right, #B056FF, #000000)`;
+                        break;
+                    }
+                    case "Beyond":{
+                        div1.style.background = `linear-gradient(to right, #db004f, #000000)`;
+                        break;
+                    }
+                    case "Eternal":{
+                        div1.style.background = `linear-gradient(to right, #5f63ff, #000000)`;
+                        break;
+                    }
+                    default:{
+                        div1.style.background = `linear-gradient(to right, #B056FF, #000000)`;
+                        break;
+                    }
+                }
+                div2.classList.add('layer');
+                div2.innerHTML = `
+                    <div class="song-illustration">
+                        <img src="/assets/illustrations/${data[i].id}.jpg" alt="">
+                    </div>
+                    <div class="song-score">
+                        <div class="score">${data[i].score}</div>
+                        <div class="rating">${data[i].difficulty}->${data[i].rating}</div>
+                    </div>
+                `;
+                th.appendChild(div1);
+                th.appendChild(div2);
+                tr.appendChild(th);
+            }
+            best30 = (best30/30).toFixed(3);
+            recent10 = (recent10/10).toFixed(3);
+            document.querySelector('.best-30').textContent = `Best 30: ${best30}`;
+            document.querySelector('.recent-10').textContent = `Recent 10: ${recent10}`;
+            document.querySelector('.max-potential').textContent = `Max Potential: ${best30*0.75 + recent10*0.25}`;
+        }).catch(error => console.log(error));
+    }
+    get_username();
+    get_bests();
+</script>
+</html>

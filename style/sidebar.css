@@ -1,0 +1,43 @@
+.fa-navicon{
+    position: absolute;
+    left: 30px;
+    top: 30px;
+    scale: 1.4;
+    z-index: 6166;
+    cursor: pointer;
+    color: grey;
+    transition: ease 0.3s color;
+}
+.fa-navicon:hover{
+    color: white;
+    scale: 1.43;
+}
+.sidebar {
+    position: absolute;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.8);
+    width: 200px;
+    z-index: 100;
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    left: -200px;
+    transition: ease left 0.3s;
+}
+.sidebar h3 {
+    cursor: pointer;
+}
+.sidebar a{
+    margin: 18px;
+    text-decoration: none;
+    color: rgb(215, 215, 215);
+    font-size: 15px;
+    font-weight: 600;
+    border-radius: 3px;
+    transition: ease color,scale 0.3s;
+    white-space: nowrap;
+}
+.sidebar a:hover {
+    color: rgb(255, 255, 255);
+    scale: 1.03;
+}

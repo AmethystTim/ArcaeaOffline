@@ -1,0 +1,200 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Arcaea Offline - AI-chan</title>
+</head>
+<link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+<link rel="stylesheet" type="text/css" href="/style/sidebar.css">
+<style>
+    body {
+        height: 100vh;
+        margin: 0px;
+        padding: 0px;
+        background-image: url('/assets/others/bg.jpg');
+        background-size: contain;
+        color: white;
+    }
+    header {
+        position: absolute;
+        top: 0px;
+        margin: 0px;
+        width: 100%;
+        display: flex;
+        flex-direction: row;
+        justify-content: end;
+        align-items: center;
+        background-color: rgba(0, 0, 0, 0.5);
+        z-index: 999;
+    }
+    header h3 {
+        position: absolute;
+        margin: 0px;
+        top: 25px;
+        left: 35px;
+        color: rgb(215, 215, 215);
+        cursor: pointer;
+    }
+    header a{
+        margin: 25px;
+        text-decoration: none;
+        color: rgb(215, 215, 215);
+        font-size: 18px;
+        font-weight: 600;
+        border-radius: 3px;
+        transition: ease color,scale 0.3s;
+        white-space: nowrap;
+    }
+    header a:hover {
+        color: rgb(255, 255, 255);
+        scale: 1.03;
+    }
+    main {
+        height: 100%;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: center;   
+    }
+    .chat-box {
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+        border-radius: 10px;
+        overflow-y: scroll;
+        height: 100%;
+    }
+    .dlg-aichan {
+        display: flex;
+        flex-direction: row;
+        align-items: flex-start;
+        margin-bottom: 15px;
+    }
+    .dlg-aichan img {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        margin-right: 10px;
+        margin-left: 20px;
+    }
+    .dlg-aichan span {
+        padding: 10px;
+        border-radius: 10px;
+        background-color: rgb(122, 99, 204);
+        color: rgb(238, 238, 238);
+        max-width: 400px;
+        font-weight: 600;
+    }
+    .options {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-evenly;
+    }
+    .selections button {
+        cursor: pointer;
+        background-color: rgb(18, 8, 65);
+        color: white;
+        padding: 10px;
+        border-radius: 5px;
+        font-weight: 600;
+        margin: 5px;
+        transition: ease background-color 0.3s;
+        color: rgb(234, 234, 234)
+    }
+    .selections button:hover {
+        background-color: rgb(122, 99, 204);
+    }
+</style>
+<body>
+    <header>
+        <h3 onclick="window.location.reload()">Arcaea Offline</h3>
+        <a href="/scores">成绩维护 <i class="fa fa-database"></i></a>
+        <a href="/bests">Arcaea Best30 <i class="fa fa-list"></i></a>
+        <a href="/aichan">AI酱 <i class="fa fa-comments-o"></i></a>
+        <a href="/settings">设置 <i class="fa fa-gear"></i></a>
+        <a href="/index">登出 <i class="fa fa-sign-out"></i></a>
+    </header>
+    <div class="sidebar">
+        <div style="height: 55px;"></div>
+        <h3 onclick="window.location.reload()">Arcaea Offline</h3>
+        <a href="/scores">成绩维护 <i class="fa fa-database"></i></a>
+        <a href="/bests">Arcaea Best30 <i class="fa fa-list"></i></a>
+        <a href="/aichan">AI酱 <i class="fa fa-comments-o"></i></a>
+        <a href="/settings">设置 <i class="fa fa-gear"></i></a>
+        <a href="/index">登出 <i class="fa fa-sign-out"></i></a>
+    </div>
+    <main>
+        <div class="chat-box">
+            <div style="height: 90px;"></div>
+            <div class="dlg-aichan">
+                <img src="/assets/others/aichan.jpg" alt="">
+                <span>你好！我是AI酱，有什么问题都可以问我哦！</span>
+            </div>
+            <div class="options">
+                <div class="selections">
+                    <button onclick="chat(0)">随机一曲 <i class="fa fa-question-circle"></i></button>
+                    <button onclick="chat(1)">推分建议 <i class="fa fa-thumbs-up"></i></button>
+                    <button onclick="chat(2)">圣经一则 <i class="fa fa-flash"></i></button>
+                </div>
+            </div>
+        </div>
+    </main>
+</body>
+<script src="/scripts/checkwidth.js"></script>
+<script>
+    function get_username() {
+        fetch('/username',{
+            method: 'GET'
+        }).then(response => response.json())
+        .then(data => {
+            document.querySelector('.username').textContent = data.username;
+        }).catch(error => console.log(error));
+    }
+    function logout() {
+        fetch('/logout',{
+            method: 'POST'
+        }).then(response => response.json()).then(data => {
+            console.log(data);
+            if (data.status == 'ok') {
+                window.location.href = '/';
+            }
+        }).catch(error => console.log(error));
+    }
+    function printer(text, interval, span){
+        let i = 0;
+        const intervalid = setInterval(() => {
+            span.innerHTML = text.slice(0, i);
+            document.querySelector('.chat-box').scrollTop = document.querySelector('.chat-box').scrollHeight;
+            i++;
+            if (i >= text.length) {
+                clearInterval(intervalid)
+            }
+        }, interval);
+    }
+    function chat(id){
+        fetch('/chat',{
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                "id": id
+            })
+        }).then(response => response.json())
+        .then(data => {
+            div = document.createElement('div');
+            div.classList.add('dlg-aichan');
+            img = document.createElement('img');
+            img.src = '/assets/others/aichan.jpg';
+            img.alt = '';
+            span = document.createElement('span');
+            span.innerHTML = '';
+            div.appendChild(img);
+            div.appendChild(span);
+            document.querySelector('.chat-box').insertBefore(div, document.querySelector('.options'));
+            printer(data.message, 20, span);
+        }).catch(error => console.log(error));
+    }
+</script>
+</html>
