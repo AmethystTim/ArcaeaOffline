@@ -1,0 +1,121 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Arcaea Offline</title>
+</head>
+<link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+<style>
+    body {
+        height: 100vh;
+        width: 100vw;
+        margin: 0px;
+        padding: 0px;
+        background-image: url('/assets/others/bg.jpg');
+        background-size: contain;
+        color: white;
+    }
+    header {
+        position: absolute;
+        top: 0px;
+        margin: 0px;
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        z-index: 999;
+    }
+    header h2 {
+        margin: 0px;
+        color: white;
+        margin: 30px;
+    }
+    main {
+        height: 95%;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: center;
+    }
+    .login-box {
+        display: flex;
+        flex-direction: column;
+        min-width: 350px;
+        background-color: rgba(0, 0, 0, 0.5);
+        padding: 20px;
+        border-radius: 10px;
+    }
+    .login-box form{
+        display: flex;
+        flex-direction: column;
+    }
+    .login-box input{
+        margin-top: 5px;
+        margin-bottom: 5px;
+        padding: 5px;
+    }
+    .login-box button{
+        background-color: #1a3aca;
+        color: white;
+        padding: 10px;
+        border-radius: 10px;
+        margin-top: 5px;
+        cursor: pointer;
+        font-weight: 600;
+    }
+    .login-box a{
+        text-decoration: none;
+        color: rgb(255, 255, 255);
+    }
+    footer  {
+        position: absolute;
+        bottom: 0px;
+        width: 100%;
+        display: flex;
+        justify-content: center;
+    }
+    footer a{
+        text-decoration: none;
+        color: white;
+        background-color: rgba(0, 0, 0, 0.6);
+        padding: 5px;
+    }
+</style>
+<body>
+    <header>
+        <h2>As I always said, if you don't like it, don't play.    —— Guy</h2>
+    </header>
+    <main>
+        <div class="login-box">
+            <h2>Arcaea Offline</h2>
+            <form action="/register" method="post">
+                <label for="username">Username  <i class="fa fa-user"></i></label>
+                <input type="text" id="username" name="username" placeholder="Guy" required>
+                <label for="password">Password <i class="fa fa-lock"></i></label>
+                <input type="password" id="password" name="password" placeholder="616sb" required>
+                <label for="confirm-password">Confirm Password <i class="fa fa-lock"></i></label>
+                <input oninput="check()" type="password" id="confirm-password" name="confirm-password" placeholder="616sb" required>
+                <a href="/" align="right">返回登录 <i class="fa fa-user"></i></a>
+                <button id="submit" type="submit">Sign up!</button>
+            </form>
+        </div>
+    </main>
+    <footer>
+       <a target="_blank" href="https://github.com/DinorexTim/ArcaeaOffline">Arcaea Offline <i class="fa fa-github"></i></a>
+    </footer>
+</body>
+<script>
+    function check() {
+        var password = document.getElementById("password").value;
+        var confirm_password = document.getElementById("confirm-password").value;
+        if (password.value != confirm_password.value) {
+            document.getElementById("confirm-password").style.border = "2px solid red";
+            input.setCustomValidity("Passwords Don't Match");
+            return false;
+        } else{
+            document.getElementById("confirm-password").style.border = "";
+            return true;
+        }
+    }
+</script>
+</html>
