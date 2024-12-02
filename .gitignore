@@ -1,8 +1,10 @@
 data/chartconstant.json
 data/songlist.json
 data/data.db
-assets/illustrations/
-assets/avatars/
+assets/illustrations/*.jpg
+assets/illustrations/*.png
+assets/avatars/*.jpg
+assets/avatars/*.png
 backup/
 test
 tmp
