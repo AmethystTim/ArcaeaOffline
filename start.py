@@ -45,6 +45,8 @@ def hash(password):
     return sha256.hexdigest()
 
 def calcRating(difficulty, score):
+    if score == '':
+        return 0
     if score >= 1000_0000:
         return difficulty + 2
     elif score >= 980_0000:
@@ -54,6 +56,8 @@ def calcRating(difficulty, score):
 
 @app.route('/')
 def index():
+    if session.get('username'):
+        return redirect('/scores')
     return send_from_directory('public','index.html')
 
 @app.route('/<path:path>')
@@ -101,7 +105,27 @@ def serve_asset(file):
 
 @app.route('/register', methods=['POST'])
 def register():
-    pass
+    conn = sqlite3.connect(os.getenv('DB_PATH'))
+    cursor = conn.cursor()
+    username = request.form['username']
+    password = request.form['password']
+    confirm_password = request.form['confirm-password']
+    if password != confirm_password:
+        print(Fore.RED + f'Error: Passwords do not match')
+        Fore.WHITE
+        return jsonify({'message': "Passwords do not match"})
+    
+    cursor.execute('''SELECT * from users WHERE username = ?''', (username,))
+    rows = cursor.fetchall()
+    if len(rows) == 0:
+        cursor.execute('''INSERT INTO users(username, password) VALUES (?, ?)''', (username, hash(password)))
+        conn.commit()
+        session['username'] = username
+        return redirect('/scores')
+    
+    print(Fore.RED + f'Error: {username} already exists')
+    Fore.WHITE
+    return jsonify({'message': "Username already exists"})
 
 @app.route('/username', methods=['GET'])
 def get_username():
