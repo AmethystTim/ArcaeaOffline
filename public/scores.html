@@ -159,6 +159,23 @@
 
                 document.getElementById('table-header').insertAdjacentElement('afterend', tr);
             }
+            // 快速输入
+            const inputs = document.querySelectorAll('input[type="number"]');
+            inputs.forEach((input, index) => {
+                input.addEventListener('keydown', function (event) {
+                    if (event.key === 'Enter' || event.key === 'Tab' || event.key === 'ArrowDown') {
+                        event.preventDefault(); 
+                        if (index + 1 < inputs.length) {
+                            inputs[index + 1].focus();
+                        }
+                    } else if (event.key === 'ArrowUp') {
+                        event.preventDefault(); 
+                        if (index - 1 >= 0) {
+                            inputs[index - 1].focus();
+                        }
+                    }
+                });
+            });
         }).catch(error => console.log(error));
     }
 
