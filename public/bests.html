@@ -59,7 +59,6 @@
     main table{
         position: relative;
         width: 100%;
-        margin-top: 170px;
         background-color: rgba(0, 0, 0, 0.5);
     }
     main table th {
@@ -78,28 +77,28 @@
         border-radius: 6px;
     }
     .user-info {
-        position: absolute;
         display: flex;
         flex-direction: row;
         align-items: center;
+        flex-wrap: wrap;
         width: 100%;
-        height: 95px;
-        top: 75px;
+        justify-content: space-between;
+        margin-top: 80px;
         font-weight: 600;
     }
     .sub-user-info {
-        width: 100%;
         height: 100%;
         display: flex;
         flex-direction: row;
         align-items: center;
     }
     main span.avatar {
-        margin: 20px;
+        margin: 6px;
         margin-left: 40px;
+        margin-right: 20px;
     }
     main span.avatar img{
-        height: 100%;
+        height: 82px;
         width: calc(width);
     }
     main span.username {
@@ -110,7 +109,6 @@
     .rating-info {
         position: relative;
         width: 200px;
-        right: 55px;
         color: rgb(220, 220, 220);
     }
     main table{
