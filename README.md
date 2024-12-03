@@ -1,8 +1,10 @@
-# Arcaea Offline
+<h1 align="center">Arcaea Offline</h1>
+
+<div align="center">
 
 **As I always said, if you don't like it, don't play.    —— Guy**
 
-使用`Arcaea Offline`避免Guy哥每月200源点的巨额订阅费用🫵
+</div>
 
 ## Arcaea Offline 支持功能
 
