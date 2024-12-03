@@ -179,17 +179,6 @@
             });
         }).catch(error => console.log(error));
     }
-
-    function logout() {
-        fetch('/logout',{
-            method: 'POST'
-        }).then(response => response.json()).then(data => {
-            console.log(data);
-            if (data.status == 'ok') {
-                window.location.href = '/';
-            }
-        }).catch(error => console.log(error));
-    }
     get_chart();
 </script>
 </html>
