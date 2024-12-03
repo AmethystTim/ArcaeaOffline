@@ -132,7 +132,33 @@
                 th_difficulty.innerText = data[i].difficulty;
                 th_class.innerText = data[i].class;
                 th_id.innerText = data.length-i;
-                
+                th_class.style.borderRadius = '10px';
+                switch (data[i].class) {
+                    case "Past":{
+                        th_class.style.background = `linear-gradient(45deg, #0077ff, transparent)`;
+                        break;
+                    }
+                    case "Present":{
+                        th_class.style.background = `linear-gradient(45deg, #01b73a, transparent)`;
+                        break;
+                    }
+                    case "Future":{
+                        th_class.style.background = `linear-gradient(45deg, #B056FF, transparent)`;
+                        break;
+                    }
+                    case "Beyond":{
+                        th_class.style.background = `linear-gradient(45deg, #db004f, transparent)`;
+                        break;
+                    }
+                    case "Eternal":{
+                        th_class.style.background = `linear-gradient(45deg, #5f63ff, transparent)`;
+                        break;
+                    }
+                    default:{
+                        th_class.style.background = `linear-gradient(45deg, #B056FF, transparent)`;
+                        break;
+                    }
+                }
                 let scoreinput = document.createElement('input');
                 scoreinput.value = data[i].score;
                 scoreinput.type = 'number';
