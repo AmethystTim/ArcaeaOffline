@@ -115,6 +115,7 @@
         position: relative;
         width: 200px;
         color: rgb(220, 220, 220);
+        margin-left: 20px;
     }
     main table{
         display: flex;
@@ -195,6 +196,32 @@
     .avatar-list img:hover {
         scale: 1.2;
     }
+    .rank{
+        position: relative;
+        left: -50px;
+        top: 26px;
+        width: 45px;
+    }
+    .rank img{
+        width: 100%;
+        height: 100%;
+    }
+    @font-face {
+        font-family: 'Exo_SemiBold';
+        src: url('/assets/others/Exo-SemiBold.ttf') format('truetype');
+    }
+    .rank-rating {
+        display: flex;
+        width: 32px;
+        flex-direction: column;
+        align-items: center;
+        /* font-size: 16px; */
+        font-weight: 600;
+        font-family: Exo_SemiBold, sans-serif;
+        position: relative;
+        top: 26px;
+        left: -89px;
+    }
 </style>
 <body>
     <div class="avatar-list"></div>
@@ -219,6 +246,8 @@
         <div class="user-info">
             <div class="sub-user-info">
                 <span class="avatar" onclick="avatar_list_toggle()"><img src="/assets/others/default.png" alt=""></span>
+                <span class="rank"><img class="rank-img" src="/assets/others/rating_off.png" alt=""></span>
+                <span class="rank-rating"></span>
                 <span class="username"></span>
             </div>
             <div class="rating-info">
@@ -311,7 +340,48 @@
             recent10 = (recent10/10).toFixed(3);
             document.querySelector('.best-30').textContent = `Best 30: ${best30}`;
             document.querySelector('.recent-10').textContent = `Recent 10: ${recent10}`;
-            document.querySelector('.max-potential').textContent = `Max Potential: ${best30*0.75 + recent10*0.25}`;
+            document.querySelector('.max-potential').textContent = `Max Potential: ${(best30*0.75 + recent10*0.25).toFixed(3)}`;
+            let maxptt = best30*0.75 + recent10*0.25;
+            let p = document.createElement('p');
+            let p1 = document.createElement('p');
+            let p2 = document.createElement('p');
+            p.style.display = 'flex';
+            p.style.alignItems = 'end';
+            p.style.flexDirection = 'row';
+            p1.textContent = `${maxptt.toString().slice(0, maxptt.toString().indexOf('.'))}.`;
+            p1.style.webkitTextStroke = "0.3px black";
+            p2.textContent = maxptt.toString().slice(maxptt.toString().indexOf('.')+1, maxptt.toString().indexOf('.')+ 3);
+            p2.style.webkitTextStroke = "0.2px black";
+            p1.style.fontSize = "20px";
+            p2.style.fontSize = "17px";
+            p1.style.margin = '0px';
+            p1.style.padding = '0px';
+            p1.style.position = 'relative';
+            p1.style.bottom = '1px'
+            p2.style.position = 'relative';
+            p2.style.bottom = '2px'
+            p2.style.margin = '0px';
+            p2.style.padding = '0px';
+            p.appendChild(p1);
+            p.appendChild(p2);
+            document.querySelector('.rank-rating').appendChild(p);
+            if (maxptt >= 13.00){
+                document.querySelector('.rank-img').src = "/assets/others/rating_7.png";
+            } else if (maxptt >= 12.50){
+                document.querySelector('.rank-img').src = "/assets/others/rating_6.png";
+            } else if (maxptt >= 12.00){
+                document.querySelector('.rank-img').src = "/assets/others/rating_5.png";
+            } else if (maxptt >= 11.00){
+                document.querySelector('.rank-img').src = "/assets/others/rating_4.png";
+            } else if (maxptt >= 10.00){
+                document.querySelector('.rank-img').src = "/assets/others/rating_3.png";
+            } else if (maxptt >= 7.00){
+                document.querySelector('.rank-img').src = "/assets/others/rating_2.png";
+            } else if (maxptt >= 3.50){
+                document.querySelector('.rank-img').src = "/assets/others/rating_1.png";
+            } else {
+                document.querySelector('.rank-img').src = "/assets/others/rating_0.png";
+            }
         }).catch(error => console.log(error));
     }
     function avatar_list_toggle() {
@@ -359,7 +429,11 @@
         }).then(response => response.json())
         .then(data => {
             console.log(data);
-            document.querySelector('.avatar img').src = "/assets/avatars/"+data.avatar;
+            if (data.avatar == 'default.png'){
+                document.querySelector('.avatar img').src = "/assets/others/"+data.avatar;
+            } else {
+                document.querySelector('.avatar img').src = "/assets/avatars/"+data.avatar;
+            }
         }).catch(error => console.log(error));
     }
     get_username();
