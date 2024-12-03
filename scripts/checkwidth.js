@@ -13,7 +13,7 @@ function checkWidth() {
         <a href="/bests">Arcaea Best30 <i class="fa fa-list"></i></a>
         <a href="/aichan">AI酱 <i class="fa fa-comments-o"></i></a>
         <a href="/settings">设置 <i class="fa fa-gear"></i></a>
-        <a href="/index">登出 <i class="fa fa-sign-out"></i></a>
+        <a href="#" onclick="logout()">登出 <i class="fa fa-sign-out"></i></a>
         `
         sidebar.style.display = "none";
     }
