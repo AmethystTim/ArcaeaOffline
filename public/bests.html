@@ -96,6 +96,11 @@
         margin: 6px;
         margin-left: 40px;
         margin-right: 20px;
+        cursor: pointer;
+        transition: ease scale 0.25s;
+    }
+    main span.avatar:hover {
+        scale: 1.1;
     }
     main span.avatar img{
         height: 82px;
@@ -162,15 +167,44 @@
     .max-potential,.recent-10,.best-30 {
         white-space: nowrap;
     }
+    .avatar-list {
+        display: flex;
+        opacity: 0;
+        flex-direction: row;
+        flex-wrap: wrap;
+        width: 300px;
+        height: 360px;
+        background-color: rgba(0, 0, 0, 0.8);
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        border-radius: 30px;
+        overflow-y: scroll;
+        padding: 20px;
+        z-index: -10;
+        transition: ease opacity 0.3s;
+    }
+    .avatar-list img{
+        width: 60px;
+        height: 60px;
+        margin: 10px;
+        cursor: pointer;
+        transition: ease scale 0.2s;
+    }
+    .avatar-list img:hover {
+        scale: 1.2;
+    }
 </style>
 <body>
+    <div class="avatar-list"></div>
     <header>
         <h3 onclick="window.location.reload()">Arcaea Offline</h3>
         <a href="/scores">成绩维护 <i class="fa fa-database"></i></a>
         <a href="/bests">Arcaea Best30 <i class="fa fa-list"></i></a>
         <a href="/aichan">AI酱 <i class="fa fa-comments-o"></i></a>
         <a href="/settings">设置 <i class="fa fa-gear"></i></a>
-        <a href="/index">登出 <i class="fa fa-sign-out"></i></a>
+        <a href="#" onclick="logout()">登出 <i class="fa fa-sign-out"></i></a>
     </header>
     <div class="sidebar">
         <div style="height: 55px;"></div>
@@ -179,12 +213,12 @@
         <a href="/bests">Arcaea Best30 <i class="fa fa-list"></i></a>
         <a href="/aichan">AI酱 <i class="fa fa-comments-o"></i></a>
         <a href="/settings">设置 <i class="fa fa-gear"></i></a>
-        <a href="/index">登出 <i class="fa fa-sign-out"></i></a>
+        <a href="#" onclick="logout()">登出 <i class="fa fa-sign-out"></i></a>
     </div>
     <main>
         <div class="user-info">
             <div class="sub-user-info">
-                <span class="avatar"><img src="/assets/avatars/0.png" alt=""></span>
+                <span class="avatar" onclick="avatar_list_toggle()"><img src="/assets/others/default.png" alt=""></span>
                 <span class="username"></span>
             </div>
             <div class="rating-info">
@@ -200,6 +234,7 @@
     </main>
 </body>
 <script src="/scripts/checkwidth.js"></script>
+<script src="/scripts/logout.js"></script>
 <script>
     function get_username() {
         fetch('/username',{
@@ -207,16 +242,6 @@
         }).then(response => response.json())
         .then(data => {
             document.querySelector('.username').textContent = data.username;
-        }).catch(error => console.log(error));
-    }
-    function logout() {
-        fetch('/logout',{
-            method: 'POST'
-        }).then(response => response.json()).then(data => {
-            console.log(data);
-            if (data.status == 'ok') {
-                window.location.href = '/';
-            }
         }).catch(error => console.log(error));
     }
     function get_bests() {
@@ -289,7 +314,56 @@
             document.querySelector('.max-potential').textContent = `Max Potential: ${best30*0.75 + recent10*0.25}`;
         }).catch(error => console.log(error));
     }
+    function avatar_list_toggle() {
+        let avatar_list = document.querySelector('.avatar-list');
+        if (avatar_list.style.opacity == 1) {
+            avatar_list.style.opacity = 0;
+            avatar_list.style.zIndex = -10;
+        } else {
+            avatar_list.style.opacity = 1;
+            avatar_list.style.zIndex = 1000;
+            fetch('/avatar_list',{
+                method: 'GET'
+            }).then(response => response.json())
+            .then(data => {
+                console.log(data);
+                let avatar_list = document.querySelector('.avatar-list');
+                for (let i = 0; i < data.length; i++) {
+                    if (data[i]=='.gitkeep'){
+                        continue;
+                    }
+                    let img = document.createElement('img');
+                    img.src = "/assets/avatars/"+data[i];
+                    img.onclick = function() {
+                        avatar_list.style.opacity = 0;
+                        avatar_list.style.zIndex = -10;
+                        document.querySelector('.avatar img').src = this.src;
+                        fetch('/set_avatar',{
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify({
+                                avatar: data[i]
+                            })
+                        }).catch(error => console.log(error));
+                    }
+                    avatar_list.appendChild(img);
+                }
+            });
+        }
+    }
+    function get_avatar() {
+        fetch('/get_avatar',{
+            method: 'GET'
+        }).then(response => response.json())
+        .then(data => {
+            console.log(data);
+            document.querySelector('.avatar img').src = "/assets/avatars/"+data.avatar;
+        }).catch(error => console.log(error));
+    }
     get_username();
+    get_avatar();
     get_bests();
 </script>
 </html>

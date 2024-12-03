@@ -101,6 +101,7 @@ def login():
     
 @app.route('/assets/<path:file>')
 def serve_asset(file):
+    file = file.replace('&', '%26')
     return send_from_directory('./assets', file)
 
 @app.route('/register', methods=['POST'])
@@ -245,6 +246,45 @@ def chat():
         return jsonify({'message': df[random.randint(0, len(df)-1)]})
     else:
         return jsonify({'message': "爆！"})
+
+@app.route('/logout', methods=['POST'])
+def logout():
+    if session.get('username'):
+        session.pop('username', None)
+    return redirect('/')
+
+@app.route('/get_avatar', methods=['GET'])
+def get_avatar():
+    if not session.get('username'):
+        return jsonify({'avatar': 'default.png'}), 400
+    conn = sqlite3.connect(os.getenv('DB_PATH'))
+    cursor = conn.cursor()
+    cursor.execute('''SELECT * from custom WHERE username = ?''', (session['username'],))
+    rows = cursor.fetchall()
+    if len(rows) == 0:
+        conn.close()
+        return jsonify({'avatar': 'default.png'})
+    else:
+        conn.close()
+        return jsonify({'avatar': rows[0][1]})
+
+@app.route('/avatar_list', methods=['GET'])
+def avatar_list():
+    if not session.get('username'):
+        return jsonify({'success': False}), 400
+    return jsonify(os.listdir('./assets/avatars')), 200
+
+@app.route('/set_avatar', methods=['POST'])
+def set_avatar():
+    if not session.get('username'):
+        return jsonify({'success': False}), 400
+    data = request.get_json()
+    conn = sqlite3.connect(os.getenv('DB_PATH'))
+    cursor = conn.cursor()
+    cursor.execute('''INSERT OR REPLACE INTO custom (username, avatar) VALUES (?, ?)''', (session['username'], data.get('avatar')))
+    conn.commit()
+    conn.close()
+    return jsonify({'success': True}), 200
 
 if __name__ == '__main__':
     print( '==============================================================================================')
