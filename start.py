@@ -85,6 +85,15 @@ def stylesheets(file):
         Fore.WHITE
         return None
     
+@app.route('/template/<path:file>', methods=['GET'])
+def templates(file):
+    if os.path.isfile(os.path.join('template',f'{file}.html')):
+        return send_from_directory('template',f'{file}.html')
+    else:
+        print(Fore.RED + f'Error: {file}.html not found')
+        Fore.WHITE
+        return None
+    
 @app.route('/login', methods=['POST'])
 def login():
     conn = sqlite3.connect(os.getenv('DB_PATH'))
