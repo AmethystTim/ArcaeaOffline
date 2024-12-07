@@ -295,6 +295,31 @@ def set_avatar():
     conn.close()
     return jsonify({'success': True}), 200
 
+@app.route('/get_p30', methods=['GET'])
+def get_p30():
+    if not session.get('username'):
+        return jsonify({'success': False}), 400
+    conn = sqlite3.connect(os.getenv('DB_PATH'))
+    cursor = conn.cursor()
+    cursor.execute('''SELECT * from songs WHERE username = ?''', (session['username'],))
+    rows = cursor.fetchall()
+    data = []
+    for row in rows:
+        if row[2] == '' or int(row[2]) < 1000_0000:
+            continue
+        data.append({
+            'id': row[0],
+            'name': next(song for song in songlist['songs'] if song['id'] == row[0])['title_localized']['en'],
+            'class': row[1],
+            'difficulty': chartconstant[row[0]][class2num[row[1]]]['constant'],
+            'score': row[2],
+            'rating': round(calcRating(chartconstant[row[0]][class2num[row[1]]]['constant'], row[2]), 3)
+        })
+    data.sort(key=lambda x: x['rating'], reverse=True)
+    conn.close()
+    return jsonify(data[:30])
+
+
 if __name__ == '__main__':
     print( '==============================================================================================')
     print(r'       _____                                               _____  _____.__  .__               ')

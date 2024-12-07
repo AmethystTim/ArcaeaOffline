@@ -117,7 +117,7 @@
         color: rgb(220, 220, 220);
         margin-left: 20px;
     }
-    .max-potential, .best-30, .recent-10 {
+    .avg-rating, .best-30 {
         background: linear-gradient(to right, #0077ff, #ca0b0b);
         border-radius: 15px;
         padding: 2px;
@@ -172,7 +172,7 @@
         flex-direction: column;
         justify-content: space-between;
     }
-    .max-potential,.recent-10,.best-30 {
+    .avg-rating, .best-30 {
         white-space: nowrap;
     }
     .avatar-list {
@@ -237,14 +237,12 @@
         <div class="user-info">
             <div class="sub-user-info">
                 <span class="avatar" onclick="avatar_list_toggle()"><img src="/assets/others/default.png" alt=""></span>
-                <span class="rank"><img class="rank-img" src="/assets/others/rating_off.png" alt=""></span>
                 <span class="rank-rating"></span>
                 <span class="username"></span>
             </div>
             <div class="rating-info">
-                <div class="max-potential">Max Potential</div>
-                <div class="best-30">Best 30</div>
-                <div class="recent-10">Recent 10</div>
+                <div class="best-30">P30</div>
+                <div class="avg-rating">AVG Rating</div>
             </div>
         </div>
         <table>
@@ -264,22 +262,16 @@
             document.querySelector('.username').textContent = data.username;
         }).catch(error => console.log(error));
     }
-    function get_bests() {
-        fetch('/get_bests',{
+    function get_p30() {
+        fetch('/get_p30',{
             method: 'GET'
         }).then(response => response.json())
         .then(data => {
             console.log(data);
-            let best30 = 0, recent10 = 0;
+            let best30 = 0;
             let tr = document.querySelector('tr');
             for (let i = 0; i < data.length; i++) {
-                if (data[i].rating == 0){
-                    break;
-                }
                 best30 += data[i].rating;
-                if (i < 10){
-                    recent10 += data[i].rating;
-                }
                 let th = document.createElement('th');
                 style = "";
                 let div1 = document.createElement('div');
@@ -327,52 +319,9 @@
                 th.appendChild(div2);
                 tr.appendChild(th);
             }
+            document.querySelector('.avg-rating').textContent = `AVG Rating: ${(best30/(data.length)).toFixed(3)}`;
             best30 = (best30/30).toFixed(3);
-            recent10 = (recent10/10).toFixed(3);
-            document.querySelector('.best-30').textContent = `Best 30: ${best30}`;
-            document.querySelector('.recent-10').textContent = `Recent 10: ${recent10}`;
-            document.querySelector('.max-potential').textContent = `Max Potential: ${(best30*0.75 + recent10*0.25).toFixed(3)}`;
-            let maxptt = best30*0.75 + recent10*0.25;
-            let p = document.createElement('p');
-            let p1 = document.createElement('p');
-            let p2 = document.createElement('p');
-            p.style.display = 'flex';
-            p.style.alignItems = 'end';
-            p.style.flexDirection = 'row';
-            p1.textContent = `${maxptt.toString().slice(0, maxptt.toString().indexOf('.'))}.`;
-            p1.style.webkitTextStroke = "0.3px black";
-            p2.textContent = maxptt.toString().slice(maxptt.toString().indexOf('.')+1, maxptt.toString().indexOf('.')+ 3);
-            p2.style.webkitTextStroke = "0.2px black";
-            p1.style.fontSize = "20px";
-            p2.style.fontSize = "17px";
-            p1.style.margin = '0px';
-            p1.style.padding = '0px';
-            p1.style.position = 'relative';
-            p1.style.bottom = '1px'
-            p2.style.position = 'relative';
-            p2.style.bottom = '2px'
-            p2.style.margin = '0px';
-            p2.style.padding = '0px';
-            p.appendChild(p1);
-            p.appendChild(p2);
-            document.querySelector('.rank-rating').appendChild(p);
-            if (maxptt >= 13.00){
-                document.querySelector('.rank-img').src = "/assets/others/rating_7.png";
-            } else if (maxptt >= 12.50){
-                document.querySelector('.rank-img').src = "/assets/others/rating_6.png";
-            } else if (maxptt >= 12.00){
-                document.querySelector('.rank-img').src = "/assets/others/rating_5.png";
-            } else if (maxptt >= 11.00){
-                document.querySelector('.rank-img').src = "/assets/others/rating_4.png";
-            } else if (maxptt >= 10.00){
-                document.querySelector('.rank-img').src = "/assets/others/rating_3.png";
-            } else if (maxptt >= 7.00){
-                document.querySelector('.rank-img').src = "/assets/others/rating_2.png";
-            } else if (maxptt >= 3.50){
-                document.querySelector('.rank-img').src = "/assets/others/rating_1.png";
-            } else {
-                document.querySelector('.rank-img').src = "/assets/others/rating_0.png";
-            }
+            document.querySelector('.best-30').textContent = `P30: ${best30}`;
         }).catch(error => console.log(error));
     }
     function avatar_list_toggle() {
@@ -429,6 +378,6 @@
     }
     get_username();
     get_avatar();
-    get_bests();
+    get_p30();
 </script>
 </html>
