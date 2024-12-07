@@ -1,21 +1,24 @@
 function checkWidth() {
     var width = window.innerWidth;
     if (width < 875) {
-        const sidebar = document.querySelector(".sidebar");
-        sidebar.style.display = "flex";
-        sidebar.style.left = "-200px";
-        document.querySelector('header').innerHTML=`<i class="fa fa-navicon" onclick="sidebarToggle()"></i>`
+        fetch('/template/sidebar',{
+            method: 'GET',
+        }).then(response => response.text())
+        .then(data => {
+            document.body.insertAdjacentHTML('afterbegin', data);
+            document.querySelector('header').innerHTML = `<i class="fa fa-navicon" onclick="sidebarToggle()"></i>`;
+            const sidebar = document.querySelector(".sidebar");
+            sidebar.style.display = "flex";
+            sidebar.style.left = "-200px";
+        }).catch(error => console.error(error));
     }else{
-        const sidebar = document.querySelector(".sidebar");
-        document.querySelector('header').innerHTML=`
-        <h3 onclick="window.location.reload()">Arcaea Offline</h3>
-        <a href="/scores">成绩维护 <i class="fa fa-database"></i></a>
-        <a href="/bests">Arcaea Best30 <i class="fa fa-list"></i></a>
-        <a href="/aichan">AI酱 <i class="fa fa-comments-o"></i></a>
-        <a href="/settings">设置 <i class="fa fa-gear"></i></a>
-        <a href="#" onclick="logout()">登出 <i class="fa fa-sign-out"></i></a>
-        `
-        sidebar.style.display = "none";
+        fetch('/template/header',{
+            method: 'GET',
+        }).then(response => response.text())
+        .then(data => {
+            document.querySelector('header').innerHTML = data;
+        }).catch(error => console.error(error));
+        document.querySelector(".sidebar").remove();
     }
 }
 
