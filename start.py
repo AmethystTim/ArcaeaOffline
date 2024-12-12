@@ -319,6 +319,27 @@ def get_p30():
     conn.close()
     return jsonify(data[:30])
 
+@app.route('/get_max', methods=['GET'])
+def get_max():
+    data = []
+    for song in songlist['songs']:
+        chart = chartconstant[song['id']]
+        for index in range(len(chart)):
+            if not chart[index]:
+                continue
+            data.append({
+                'id': song['id'],
+                'name': song['title_localized']['en'],
+                'artist': song['artist'],
+                'difficulty': chart[index]['constant'],
+                'class': class_song[index],
+                "score": 1000_0616,
+                "rating": calcRating(chart[index]['constant'], 1000_0000)
+            })
+            
+    data.sort(key=lambda x: x['difficulty'])
+    data = data[::-1]
+    return jsonify(data[:30])
 
 if __name__ == '__main__':
     print( '==============================================================================================')

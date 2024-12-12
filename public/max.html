@@ -1,0 +1,354 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Arcaea Offline - Bests</title>
+</head>
+<link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+<link rel="stylesheet" type="text/css" href="/style/sidebar.css">
+<style>
+    body {
+        height: 100vh;
+        margin: 0px;
+        padding: 0px;
+        background-image: url('/assets/others/bg.jpg');
+        background-size: contain;
+        color: white;
+    }
+    header {
+        position: absolute;
+        top: 0px;
+        margin: 0px;
+        width: 100%;
+        height: 75px;
+        display: flex;
+        flex-direction: row;
+        justify-content: end;
+        align-items: center;
+        background-color: rgba(0, 0, 0, 0.5);
+        z-index: 999;
+    }
+    header h3 {
+        position: absolute;
+        margin: 0px;
+        top: 25px;
+        left: 35px;
+        color: rgb(215, 215, 215);
+        cursor: pointer;
+    }
+    header a{
+        margin: 25px;
+        text-decoration: none;
+        color: rgb(215, 215, 215);
+        font-size: 18px;
+        font-weight: 600;
+        border-radius: 3px;
+        transition: ease color,scale 0.3s;
+        white-space: nowrap;
+    }
+    header a:hover {
+        color: rgb(255, 255, 255);
+        scale: 1.03;
+    }
+    main {
+        position: absolute;
+        top: 0px;
+        width: 100%;
+        height: 100%;
+    }
+    main table{
+        position: relative;
+        width: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+    }
+    main table th {
+        padding: 15px;
+        margin: 0px;
+    }
+    main table tr{
+        margin: 0px;
+    }
+    main table th {
+        padding: 10px;
+    }
+    main table input {
+        padding: 5px;
+        width: 100px;
+        border-radius: 6px;
+    }
+    .user-info {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        flex-wrap: wrap;
+        width: 100%;
+        justify-content: space-between;
+        margin-top: 80px;
+        font-weight: 600;
+    }
+    .sub-user-info {
+        height: 100%;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+    }
+    main span.avatar {
+        margin: 6px;
+        margin-left: 40px;
+        margin-right: 20px;
+        cursor: pointer;
+        transition: ease scale 0.25s;
+    }
+    main span.avatar:hover {
+        scale: 1.1;
+    }
+    main span.avatar img{
+        height: 82px;
+        width: calc(width);
+    }
+    main span.username {
+        font-size: 32px;
+        font-family: 'Courier New', Courier, monospace;
+        overflow-x: hidden;
+    }
+    .rating-info {
+        position: relative;
+        width: 200px;
+        color: rgb(220, 220, 220);
+        margin-left: 20px;
+    }
+    .max-potential, .best-30, .recent-10 {
+        background: linear-gradient(to right, #0077ff, #ca0b0b);
+        border-radius: 15px;
+        padding: 2px;
+        padding-left: 5px;
+        margin: 3px;
+    }
+    main table{
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+    main table tr{
+        display: flex;
+        flex-direction: row;
+        justify-content: space-evenly;
+        flex-wrap: wrap;
+    }
+    main table th{
+        display: flex;
+        flex-direction: column;
+        border: 1px solid white;
+        margin: 10px;
+        width: 175px;
+        white-space: nowrap;
+        color: rgb(220, 220, 220);
+    }
+    .layer {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-around;
+    }
+    .layer img{
+        width: 55px;
+        border-radius: 50%;
+    }
+    .layer .score{
+        font-size: 20px;
+    }
+    .layer .rating{
+        margin-top: 3px;
+        white-space: nowrap;
+    }
+    .song-name {
+        margin-bottom: 5px;
+        overflow-x: hidden;
+        padding-left: 4px;
+        border-radius: 10px;
+    }
+    .song-score {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+    }
+    .avg-rating, .best-30 {
+        white-space: nowrap;
+    }
+    .avatar-list {
+        display: flex;
+        opacity: 0;
+        flex-direction: row;
+        flex-wrap: wrap;
+        width: 300px;
+        height: 360px;
+        background-color: rgba(0, 0, 0, 0.8);
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        border-radius: 30px;
+        overflow-y: scroll;
+        padding: 20px;
+        z-index: -10;
+        transition: ease opacity 0.3s;
+    }
+    .avatar-list img{
+        width: 60px;
+        height: 60px;
+        margin: 10px;
+        cursor: pointer;
+        transition: ease scale 0.2s;
+    }
+    .avatar-list img:hover {
+        scale: 1.2;
+    }
+    .rank{
+        position: relative;
+        left: -50px;
+        top: 26px;
+        width: 45px;
+    }
+    .rank img{
+        width: 100%;
+        height: 100%;
+    }
+    @font-face {
+        font-family: 'Exo_SemiBold';
+        src: url('/assets/others/Exo-SemiBold.ttf') format('truetype');
+        font-weight: 700;
+    }
+    .rank-rating {
+        display: flex;
+        width: 32px;
+        flex-direction: column;
+        align-items: center;
+        font-family: Exo_SemiBold;
+        position: relative;
+        top: 26px;
+        left: -89px;
+    }
+</style>
+<body>
+    <header></header>
+    <div class="sidebar"></div>
+    <div class="avatar-list"></div>
+    <main>
+        <div class="user-info">
+            <div class="sub-user-info">
+                <span class="avatar" onclick="avatar_list_toggle()"><img src="/assets/avatars/insight.png" alt=""></span>
+                <span class="rank"><img class="rank-img" src="/assets/others/rating_off.png" alt=""></span>
+                <span class="rank-rating"></span>
+                <span class="username"></span>
+            </div>
+            <div class="rating-info">
+                <div class="max-potential">Max Potential</div>
+                <div class="best-30">Best 30</div>
+                <div class="recent-10">Recent 10</div>
+            </div>
+        </div>
+        <table>
+            <tr>
+            </tr>
+        </table>
+    </main>
+</body>
+<script src="/scripts/checkwidth.js"></script>
+<script src="/scripts/logout.js"></script>
+<script>
+    document.querySelector('.username').textContent = "Lacrymira";
+    function get_max() {
+        fetch('/get_max',{
+            method: 'GET'
+        }).then(response => response.json())
+        .then(data => {
+            console.log(data);
+            let best30 = 0, recent10 = 0;
+            let tr = document.querySelector('tr');
+            for (let i = 0; i < data.length; i++) {
+                best30 += data[i].rating;
+                if (i < 10){
+                    recent10 += data[i].rating;
+                }
+                let th = document.createElement('th');
+                style = "";
+                let div1 = document.createElement('div');
+                let div2 = document.createElement('div');
+                div1.innerHTML = `#${i+1} ${data[i].name}`;
+                div1.classList.add('song-name');
+                div1.style.textAlign = "left";
+                switch (data[i].class) {
+                    case "Past":{
+                        div1.style.background = `linear-gradient(to right, #0077ff, #000000)`;
+                        break;
+                    }
+                    case "Present":{
+                        div1.style.background = `linear-gradient(to right, #01b73a, #000000)`;
+                        break;
+                    }
+                    case "Future":{
+                        div1.style.background = `linear-gradient(to right, #B056FF, #000000)`;
+                        break;
+                    }
+                    case "Beyond":{
+                        div1.style.background = `linear-gradient(to right, #db004f, #000000)`;
+                        break;
+                    }
+                    case "Eternal":{
+                        div1.style.background = `linear-gradient(to right, #5f63ff, #000000)`;
+                        break;
+                    }
+                    default:{
+                        div1.style.background = `linear-gradient(to right, #B056FF, #000000)`;
+                        break;
+                    }
+                }
+                div2.classList.add('layer');
+                div2.innerHTML = `
+                    <div class="song-illustration">
+                        <img src="/assets/illustrations/${data[i].id}.jpg" alt="">
+                    </div>
+                    <div class="song-score">
+                        <div class="score">${data[i].score}</div>
+                        <div class="rating">${data[i].difficulty}->${data[i].rating}</div>
+                    </div>
+                `;
+                th.appendChild(div1);
+                th.appendChild(div2);
+                tr.appendChild(th);
+            }
+            document.querySelector('.rank-img').src = "/assets/others/rating_7.png";
+            best30 = (best30/30).toFixed(3);
+            recent10 = (recent10/10).toFixed(3);
+            document.querySelector('.recent-10').textContent = `Recent 10: ${recent10}`;
+            document.querySelector('.best-30').textContent = `Best 30: ${best30}`;
+            document.querySelector('.max-potential').textContent = `Max Potential: ${(best30*0.75+recent10*0.25).toFixed(3)}`;
+            let maxptt = best30*0.75 + recent10*0.25;
+            let p = document.createElement('p');
+            let p1 = document.createElement('p');
+            let p2 = document.createElement('p');
+            p.style.display = 'flex';
+            p.style.alignItems = 'end';
+            p.style.flexDirection = 'row';
+            p1.textContent = `${maxptt.toString().slice(0, maxptt.toString().indexOf('.'))}.`;
+            p1.style.webkitTextStroke = "0.3px black";
+            p2.textContent = maxptt.toString().slice(maxptt.toString().indexOf('.')+1, maxptt.toString().indexOf('.')+ 3);
+            p2.style.webkitTextStroke = "0.2px black";
+            p1.style.fontSize = "20px";
+            p2.style.fontSize = "17px";
+            p1.style.margin = '0px';
+            p1.style.padding = '0px';
+            p1.style.position = 'relative';
+            p1.style.bottom = '1px'
+            p2.style.position = 'relative';
+            p2.style.bottom = '2px'
+            p2.style.margin = '0px';
+            p2.style.padding = '0px';
+            p.appendChild(p1);
+            p.appendChild(p2);
+            document.querySelector('.rank-rating').appendChild(p);
+        }).catch(error => console.log(error));
+    }
+    get_max();
+</script>
+</html>
