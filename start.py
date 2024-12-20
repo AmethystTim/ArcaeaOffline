@@ -157,6 +157,8 @@ def get_chart():
         return jsonify({'success': False}), 400
     data = []
     for song in songlist['songs']:
+        if song['id'] not in chartconstant:
+            continue
         chart = chartconstant[song['id']]
         for index in range(len(chart)):
             if not chart[index]:
