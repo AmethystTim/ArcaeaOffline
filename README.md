@@ -17,7 +17,7 @@
 
 ### Best 30
 
-![alt text](./assets/readme/readme_bests.png)
+![alt text](./assets/readme/readme_b30.png)
 
 ### 歌曲成绩维护
 
@@ -25,7 +25,7 @@
 
 ### AI酱对话
 
-![alt text](./assets/readme/image3.png)
+![alt text](./assets/readme/readme_aichan.png)
 
 <div align="center">
 
