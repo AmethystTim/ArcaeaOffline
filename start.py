@@ -111,6 +111,9 @@ def login():
 @app.route('/assets/<path:file>')
 def serve_asset(file):
     file = file.replace('&', '%26')
+    if os.path.isfile(os.path.join('./assets',file)):
+        return send_from_directory('./assets',file)
+    file = file.replace('_byd', '')
     return send_from_directory('./assets', file)
 
 @app.route('/register', methods=['POST'])

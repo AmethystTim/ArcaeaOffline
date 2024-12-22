@@ -314,9 +314,13 @@
                     }
                 }
                 div2.classList.add('layer');
+                var url = data[i].id;
+                if(data[i].class == 'Beyond'){
+                    url = `${data[i].id}_byd`;
+                }
                 div2.innerHTML = `
                     <div class="song-illustration">
-                        <img src="/assets/illustrations/${data[i].id}.jpg" alt="">
+                        <img src="/assets/illustrations/${url}.jpg" alt="">
                     </div>
                     <div class="song-score">
                         <div class="score">${data[i].score}</div>
