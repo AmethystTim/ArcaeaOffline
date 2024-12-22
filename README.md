@@ -17,7 +17,7 @@
 
 ### Best 30
 
-![alt text](./assets/readme/readme_b30.png)
+![alt text](./assets/readme/readme_best30.png)
 
 ### 歌曲成绩维护
 
