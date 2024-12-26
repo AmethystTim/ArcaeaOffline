@@ -1,0 +1,35 @@
+header {
+    position: fixed;
+    top: 0px;
+    margin: 0px;
+    width: 100%;
+    height: 75px;
+    display: flex;
+    flex-direction: row;
+    justify-content: end;
+    align-items: center;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 999;
+}
+header h3 {
+    position: absolute;
+    margin: 0px;
+    top: 25px;
+    left: 35px;
+    color: rgb(215, 215, 215);
+    cursor: pointer;
+}
+header a{
+    margin: 25px;
+    text-decoration: none;
+    color: rgb(215, 215, 215);
+    font-size: 18px;
+    font-weight: 600;
+    border-radius: 3px;
+    transition: ease color,scale 0.3s;
+    white-space: nowrap;
+}
+header a:hover {
+    color: rgb(255, 255, 255);
+    scale: 1.03;
+}

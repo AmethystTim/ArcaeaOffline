@@ -10,6 +10,7 @@ import sqlite3
 from colorama import Fore, init
 import pandas as pd
 import numpy as np
+import datetime
 
 load_dotenv()
 app = Flask(__name__)
@@ -33,10 +34,10 @@ class2num = {
     'Eternal': 4,
 }
 
-with open(os.getenv('songlist_path')) as file:
+with open(os.getenv('SONGLIST_PATH')) as file:
     songlist = json.load(file)
 
-with open(os.getenv('chartconstant_path')) as file:
+with open(os.getenv('CHARTCONSTANT_PATH')) as file:
     chartconstant = json.load(file)
 
 def hash(password):
@@ -185,6 +186,8 @@ def update_chart():
     if not session.get('username'):
         return jsonify({'success': False}), 400
     data = request.get_json()
+    if data.get('score') == '':
+        data['score'] = 0
     print(Fore.GREEN + f'{data}')
     Fore.WHITE
     conn = sqlite3.connect(os.getenv('DB_PATH'))
@@ -227,7 +230,7 @@ def chat():
         return jsonify({'success': False}), 400
     data = request.get_json()
     if data.get('id') == 0:
-        df = pd.read_csv(os.getenv('songs_recommand_path'))
+        df = pd.read_csv(os.getenv('RECOMMEND_PATH'))
         df = df.to_numpy().flatten().tolist()
         return jsonify({'message': df[random.randint(0, len(df)-1)]})
     elif data.get('id') == 1:
@@ -255,7 +258,7 @@ def chat():
             id = random.randint(30, 39)
             return jsonify({'message': f"推荐这首{data[id]['name']}！目前的得分为{int(data[id]['score'])}，不过不要强推，小心手癖！"})
     elif data.get('id') == 2:
-        df = pd.read_csv(os.getenv('bible_path'))
+        df = pd.read_csv(os.getenv('BIBLE_PATH'))
         df = df.to_numpy().flatten().tolist()
         return jsonify({'message': df[random.randint(0, len(df)-1)]})
     else:
@@ -347,6 +350,47 @@ def get_max():
     data.sort(key=lambda x: x['difficulty'])
     data = data[::-1]
     return jsonify(data[:30])
+
+@app.route('/export_chart', methods=['POST'])
+def export_chart():
+    if not session.get('username'):
+        return jsonify({'success': False}), 400
+    conn = sqlite3.connect(os.getenv('DB_PATH'))
+    cursor = conn.cursor()
+    cursor.execute('''SELECT * from songs WHERE username = ?''', (session['username'],))
+    rows = cursor.fetchall()
+    data = []
+    for row in rows:
+        data.append({
+            'id': row[0],
+            'class': row[1],
+            'score': row[2],
+        })
+    df = pd.DataFrame(data)
+    df.to_csv(os.path.join(os.getenv('EXPORT_PATH'), f'{session["username"]}_chart_{datetime.date.today()}.csv'), index=False)
+    return jsonify({'success': True}), 200
+
+@app.route('/import_chart', methods=['POST'])
+def import_chart():
+    if not session.get('username'):
+        return jsonify({'success': False}), 400
+    data = request.files['file']
+    print(Fore.GREEN + f'{data}')
+    Fore.WHITE
+    try:
+        df = pd.read_csv(data)
+        data = df.to_dict('records')
+    except Exception as e:
+        print(Fore.RED + f'Error: {e}')
+        Fore.WHITE
+        return jsonify({'success': False}), 500
+    conn = sqlite3.connect(os.getenv('DB_PATH'))
+    cursor = conn.cursor()
+    for row in data:
+        cursor.execute('''INSERT OR REPLACE INTO songs VALUES (?, ?, ?, ?)''', (row.get('id'), row.get('class'), row.get('score'), session['username']))
+    conn.commit()
+    conn.close()
+    return jsonify({'success': True}), 200
 
 if __name__ == '__main__':
     print( '==============================================================================================')

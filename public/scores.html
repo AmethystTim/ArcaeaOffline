@@ -6,6 +6,7 @@
 </head>
 <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 <link rel="stylesheet" type="text/css" href="/style/sidebar.css">
+<link rel="stylesheet" type="text/css" href="/style/header.css">
 <style>
     body {
         height: 100vh;
@@ -14,40 +15,6 @@
         background-image: url('/assets/others/bg.jpg');
         background-size: contain;
         color: white;
-    }
-    header {
-        position: absolute;
-        top: 0px;
-        margin: 0px;
-        width: 100%;
-        display: flex;
-        flex-direction: row;
-        justify-content: end;
-        align-items: center;
-        background-color: rgba(0, 0, 0, 0.5);
-        z-index: 999;
-    }
-    header h3 {
-        position: absolute;
-        margin: 0px;
-        top: 25px;
-        left: 35px;
-        color: rgb(215, 215, 215);
-        cursor: pointer;
-    }
-    header a{
-        margin: 25px;
-        text-decoration: none;
-        color: rgb(215, 215, 215);
-        font-size: 18px;
-        font-weight: 600;
-        border-radius: 3px;
-        transition: ease color,scale 0.3s;
-        white-space: nowrap;
-    }
-    header a:hover {
-        color: rgb(255, 255, 255);
-        scale: 1.03;
     }
     main {
         position: absolute;
@@ -76,6 +43,29 @@
         width: 100px;
         border-radius: 6px;
     }
+    footer {
+        position: fixed;
+        bottom: 0px;
+        width: 100%;
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        padding: 10px;
+        background-color: rgba(0, 0, 0, 0.5);
+    }
+    footer button {
+        margin: 0px 10px;
+        padding: 5px 10px;
+        border-radius: 6px;
+        background-color: rgb(18, 8, 65);
+        color: white;
+        cursor: pointer;
+        transition: ease background-color 0.3s;
+        font-weight: 700;
+    }
+    footer button:hover {
+        background-color: rgb(122, 99, 204);
+    }
 </style>
 <body>
     <header></header>
@@ -92,6 +82,10 @@
             </tr>
         </table>
     </main>
+    <footer>
+        <button onclick="export_chart()">备份成绩 <i class="fa fa-clock-o"></i></button>
+        <button onclick="import_chart()">导入成绩 <i class="fa fa-download"></i></button>
+    </footer>
 </body>
 <script src="/scripts/checkwidth.js"></script>
 <script src="/scripts/logout.js"></script>
@@ -191,5 +185,46 @@
         }).catch(error => console.log(error));
     }
     get_chart();
+    function export_chart() {
+        fetch('/export_chart',{
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+        .then(()=>{
+            alert('done : )');
+        })
+        .catch(error => {
+            alert('Ops : (');
+            console.log(error)}
+        );
+    }
+    function import_chart() {
+        let input = document.createElement('input');
+        input.type = 'file';
+        input.accept = '.csv';
+        input.style.display = 'none';
+        input.addEventListener('change', ()=>{
+            const file = event.target.files[0];
+            const formdata = new FormData();
+            formdata.append('file', file);
+            if (!confirm('导入成绩会覆盖掉原本数据，确定要导入吗？')) {
+                return;
+            }
+            fetch('/import_chart',{
+                method: 'POST',
+                body: formdata
+            })
+            .then(response => response.json())
+            .then(data => {
+                 console.log(data);
+                 window.location.reload();
+                 alert('done : )');
+            })
+            .catch(error => console.log(error));
+        });
+        input.click();
+    }
 </script>
 </html>

@@ -5,6 +5,7 @@ assets/illustrations/*.jpg
 assets/illustrations/*.png
 assets/avatars/*.jpg
 assets/avatars/*.png
-backup/
+backup/*
+!backup/.gitkeep
 test
 tmp
