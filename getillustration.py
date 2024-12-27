@@ -26,5 +26,6 @@ if response.status_code == 200:
                 file.write(response.content)
         else:
             print(f"请求失败，状态码: {response.status_code}")
+    print('done :)')
 else:
     print(f"请求失败，状态码: {response.status_code}")
