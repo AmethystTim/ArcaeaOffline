@@ -35,7 +35,7 @@
 
 ## 快速部署
 
-1. `git clone https://github.com/DinorexTim/ArcaeaOffline.git`
+1. `git clone https://github.com/AmethystTim/ArcaeaOffline.git`
 2. `pip install -r requirements.txt`安装依赖
 
 3. 运行`init.py`，完成初始化（包括曲目列表、定数信息、曲绘、搭档头像的爬取以及本地数据库的创建）
