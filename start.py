@@ -46,7 +46,7 @@ def hash(password):
     return sha256.hexdigest()
 
 def calcRating(difficulty, score):
-    if score == '':
+    if score == '' or not score:
         return 0
     if score >= 1000_0000:
         return difficulty + 2
@@ -175,6 +175,7 @@ def get_chart():
                 'difficulty': chart[index]['constant'],
                 'class': class_song[index],
                 'score': res[0][2] if len(res) == 1 else 0,
+                'rating': calcRating(chart[index]['constant'], res[0][2] if len(res) == 1 else 0)
             })
             
     data.sort(key=lambda x: x['difficulty'])
@@ -222,7 +223,7 @@ def get_bests():
         })
     data.sort(key=lambda x: x['rating'], reverse=True)
     conn.close()
-    return jsonify(data[:30])
+    return jsonify(data[:50])
 
 @app.route('/chat', methods=['POST'])
 def chat():
@@ -391,6 +392,59 @@ def import_chart():
     conn.commit()
     conn.close()
     return jsonify({'success': True}), 200
+
+@app.route('/apply_sorter', methods=['POST'])
+def apply_sorter():
+    if not session.get('username'):
+        return jsonify({'success': False}), 400
+    sorter = request.get_json()
+    print(Fore.GREEN + f'{sorter}')
+    Fore.WHITE
+    conn = sqlite3.connect(os.getenv('DB_PATH'))
+    cursor = conn.cursor()
+    rows = []
+    conn = sqlite3.connect(os.getenv('DB_PATH'))
+    cursor = conn.cursor()
+    cursor.execute('''SELECT * from songs WHERE username = ?''', (session['username'],))
+    rows = cursor.fetchall()
+    conn.close()
+    data = []
+    for song in songlist['songs']:
+        if song['id'] not in chartconstant:
+            continue
+        chart = chartconstant[song['id']]
+        for index in range(len(chart)):
+            if not chart[index]:
+                continue
+            res = [item for item in rows if item[0] == song['id'] and item[1] == class_song[index] and item[3] == session['username']]
+            data.append({
+                'id': song['id'],
+                'title': song['title_localized']['en'],
+                'artist': song['artist'],
+                'difficulty': chart[index]['constant'],
+                'class': class_song[index],
+                'score': res[0][2] if len(res) == 1 else 0,
+                'rating': calcRating(chart[index]['constant'], res[0][2] if len(res) == 1 else 0)
+            })
+    data = [
+        song for song in data 
+        if song['difficulty'] >= float(sorter['minDifficulty']) 
+        and song['difficulty'] <= float(sorter['maxDifficulty'])
+        and sorter['classes'][song['class']]
+    ]
+    match sorter['sorter']:
+        case 'byDifficulty':
+            data.sort(key=lambda x: x['difficulty'])
+        case 'byRating':
+            data.sort(key=lambda x: x['rating'])
+        case 'byName':
+            data.sort(key=lambda x: x['title'], reverse=True)
+        case 'byArtist':
+            data.sort(key=lambda x: x['artist'], reverse=True)
+        case _:
+            data.sort(key=lambda x: x['difficulty'])
+    return jsonify(data)
+    
 
 if __name__ == '__main__':
     print( '==============================================================================================')

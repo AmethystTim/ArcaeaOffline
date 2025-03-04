@@ -14,7 +14,7 @@ function get_bests() {
         console.log(data);
         let best30 = 0, recent10 = 0;
         let tr = document.querySelector('tr');
-        for (let i = 0; i < data.length; i++) {
+        for (let i = 0; i < Math.min(data.length, 30); i++) {
             if (data[i].rating == 0){
                 break;
             }
@@ -72,6 +72,66 @@ function get_bests() {
             th.appendChild(div1);
             th.appendChild(div2);
             tr.appendChild(th);
+        }
+        
+        var table_overflow = document.createElement('table');
+        var tr_overflow = document.createElement('tr');
+        table_overflow.appendChild(tr_overflow);
+        document.querySelector('main').insertAdjacentElement('beforeend', table_overflow);
+        for (let i = 30; i < data.length; i++) {
+            if (data[i].rating == 0){
+                break;
+            }
+            let th = document.createElement('th');
+            style = "";
+            let div1 = document.createElement('div');
+            let div2 = document.createElement('div');
+            div1.innerHTML = `#${i+1} ${data[i].name}`;
+            div1.classList.add('song-name');
+            div1.style.textAlign = "left";
+            switch (data[i].class) {
+                case "Past":{
+                    div1.style.background = `linear-gradient(to right, #0077ff, #000000)`;
+                    break;
+                }
+                case "Present":{
+                    div1.style.background = `linear-gradient(to right, #01b73a, #000000)`;
+                    break;
+                }
+                case "Future":{
+                    div1.style.background = `linear-gradient(to right, #B056FF, #000000)`;
+                    break;
+                }
+                case "Beyond":{
+                    div1.style.background = `linear-gradient(to right, #db004f, #000000)`;
+                    break;
+                }
+                case "Eternal":{
+                    div1.style.background = `linear-gradient(to right, #5f63ff, #000000)`;
+                    break;
+                }
+                default:{
+                    div1.style.background = `linear-gradient(to right, #B056FF, #000000)`;
+                    break;
+                }
+            }
+            div2.classList.add('layer');
+            var url = data[i].id;
+            if(data[i].class == 'Beyond'){
+                url = `${data[i].id}_byd`;
+            }
+            div2.innerHTML = `
+                <div class="song-illustration">
+                    <img src="/assets/illustrations/${url}.jpg" alt="">
+                </div>
+                <div class="song-score">
+                    <div class="score">${data[i].score}</div>
+                    <div class="rating">${data[i].difficulty}→${data[i].rating}</div>
+                </div>
+            `;
+            th.appendChild(div1);
+            th.appendChild(div2);
+            tr_overflow.appendChild(th);
         }
         best30 = (best30/30).toFixed(3);
         recent10 = (recent10/10).toFixed(3);

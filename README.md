@@ -10,6 +10,7 @@
 
 - [x] 成绩维护
 - [x] Best 30生成
+- [x] 高级筛选设置（定数、游玩潜力值、曲名、曲师排序） 
 - [x] AI酱复活（随机歌曲，推分建议，音游圣经）
 - [x] 一键更新新版本曲目信息
 - [x] 歌曲数据备份与恢复
@@ -19,9 +20,13 @@
 
 ![alt text](./assets/readme/readme_best30.png)
 
+### Overflow 20
+
+![alt text](./assets/readme/readme_overflow.png)
+
 ### 歌曲成绩维护
 
-![alt text](./assets/readme/readme_scores.png)
+![alt text](./assets/readme/scores_new.png)
 
 ### AI酱对话
 
