@@ -140,6 +140,10 @@
         flex-direction: column;
         align-items: center;
     }
+    .sorter h4{
+        margin: 0px;
+        margin-bottom: 7px;
+    }
     .classSelector h4{
         margin: 0px;
         margin-bottom: 5px;
@@ -159,6 +163,17 @@
         margin-left: 3px;
         margin-right: 3px;
     }
+    .toggle-sorter i{
+        cursor: pointer;
+        color: #7a7c7e;
+        font-weight: 900;
+        font-size: larger;
+        transition: ease color 0.3s;
+    }
+    .toggle-sorter i:hover {
+        scale: 1.2;
+        color: white;
+    }
 </style>
 <body>
     <header></header>
@@ -166,7 +181,8 @@
     <main>
         <table class="sortersTable">
             <tr>
-                <th>
+                <th class="sorter">
+                    <h4>排序方式</h4>
                     <select name="sorter" id="sorter" onchange="apply_sorter();">
                         <option value="byDifficulty">按歌曲定数排序</option>
                         <option value="byRating">按歌曲游玩潜力值排序</option>
@@ -174,7 +190,21 @@
                         <option value="byArtist">按曲师排序</option>
                     </select>
                 </th>
-                <th id="difficultyrange">
+                <th>
+                    <div class="classSelector">
+                        <h4>筛选难度</h4>
+                        <div class="classes">
+                            <span id="Past" style="background: linear-gradient(to right, #0077ff, #379fd7);" onclick="select_class(this.id); apply_sorter();">Past <i class="fa fa-check"></i></span>
+                            <span id="Present" style="background: linear-gradient(to right, #01b73a, #2e7562);" onclick="select_class(this.id); apply_sorter();">Present <i class="fa fa-check"></i></span>
+                            <span id="Future" style="background: linear-gradient(to right, #B056FF, #72488f);" onclick="select_class(this.id); apply_sorter();">Future <i class="fa fa-check"></i></span>
+                            <span id="Beyond" style="background: linear-gradient(to right, #db004f, #764242);"onclick="select_class(this.id); apply_sorter();">Beyond <i class="fa fa-check"></i></span>
+                            <span id="Eternal" style="background: linear-gradient(to right, #5f63ff, #6961a2);"onclick="select_class(this.id); apply_sorter();">Eternal <i class="fa fa-check"></i></span>
+                        </div>
+                    </div>
+                </th>
+            </tr>
+            <tr>
+                <th id="difficultyrange" colspan="2">
                     <p>筛选定数范围</p>
                     <div style="display: flex; flex-direction: column; align-items: center;">
                         <div style="display: flex; flex-direction: row; align-items: center; width: 65%;">
@@ -186,20 +216,6 @@
                             <p>到</p>
                             <input type="range" min="1.5" max="12.0" value="12.0" step="0.1" id="endRange" oninput="get_difficulty(this.value, 'maxDifficulty');apply_sorter();">
                             <p id="maxDifficulty">12.0</p>
-                        </div>
-                    </div>
-                </th>
-            </tr>
-            <tr>
-                <th colspan="2">
-                    <div class="classSelector">
-                        <h4>筛选难度</h4>
-                        <div class="classes">
-                            <span id="Past" style="background: linear-gradient(to right, #0077ff, #379fd7);" onclick="select_class(this.id); apply_sorter();">Past <i class="fa fa-check"></i></span>
-                            <span id="Present" style="background: linear-gradient(to right, #01b73a, #2e7562);" onclick="select_class(this.id); apply_sorter();">Present <i class="fa fa-check"></i></span>
-                            <span id="Future" style="background: linear-gradient(to right, #B056FF, #72488f);" onclick="select_class(this.id); apply_sorter();">Future <i class="fa fa-check"></i></span>
-                            <span id="Beyond" style="background: linear-gradient(to right, #db004f, #764242);"onclick="select_class(this.id); apply_sorter();">Beyond <i class="fa fa-check"></i></span>
-                            <span id="Eternal" style="background: linear-gradient(to right, #5f63ff, #6961a2);"onclick="select_class(this.id); apply_sorter();">Eternal <i class="fa fa-check"></i></span>
                         </div>
                     </div>
                 </th>
