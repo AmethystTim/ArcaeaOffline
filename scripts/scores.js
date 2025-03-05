@@ -7,7 +7,7 @@ function calcptt(difficulty, score) {
     } else if (score >= 980_0000){
         return difficulty + 1 + (score - 980_0000) / 20_0000
     } else{
-        return max(difficulty + (score - 950_0000) / 30_0000, 0)
+        return Math.max(difficulty + (score - 950_0000) / 30_0000, 0)
     }
 }
 function update_chart(data) {
