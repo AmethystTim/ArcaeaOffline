@@ -26,7 +26,7 @@
 
 ### 歌曲成绩维护
 
-![alt text](./assets/readme/scores_new.png)
+![alt text](./assets/readme/readme_scores_new.png)
 
 ### AI酱对话
 
