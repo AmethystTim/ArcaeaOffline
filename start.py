@@ -117,6 +117,10 @@ def serve_asset(file):
     file = file.replace('_byd', '')
     return send_from_directory('./assets', file)
 
+@app.route('/favicon.ico')
+def serve_favicon():
+    return send_from_directory('./','favicon.ico')
+
 @app.route('/register', methods=['POST'])
 def register():
     conn = sqlite3.connect(os.getenv('DB_PATH'))
