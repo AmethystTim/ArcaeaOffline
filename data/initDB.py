@@ -1,11 +1,13 @@
 import sqlite3
 import hashlib
+import os
+
 def hash(password):
     sha256 = hashlib.sha256()
     sha256.update(password.encode('utf-8'))
     return sha256.hexdigest()
 
-conn = sqlite3.connect('./data/data.db')
+conn = sqlite3.connect(os.path.join(os.path.dirname(__file__), 'data.db'))
 
 cursor = conn.cursor()
 cursor.execute('''  CREATE TABLE IF NOT EXISTS users (

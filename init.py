@@ -10,15 +10,13 @@ print(r'    \____|__  /__|    \___  >____  /\___  >____  /  \____/|__|   |__|  |
 print(r'            \/            \/     \/     \/     \/                                   \/     \/ ')
 print( '==============================================================================================')
 
-if not os.path.isfile(os.path.join('data','initDB.py')):
-    print('请检查是否在ArcaeaOffline目录下运行此脚本 :)')
-else:
-    print("正在创建本地数据库")
-    subprocess.run(['python', './data/initDB.py'], check=True)
-    print("获取曲目信息...")
-    subprocess.run(['python', 'getchart.py'], check=True)
-    print("获取曲绘、头像...")
-    subprocess.run(['python', 'getillustration.py'], check=True)
-    subprocess.run(['python', 'getavatar.py'], check=True)
+curdir = os.path.abspath(os.path.dirname(__file__))
+print("正在创建本地数据库")
+subprocess.run(['python', os.path.join(curdir,'./data/initDB.py')], check=True)
+print("获取曲目信息...")
+subprocess.run(['python', os.path.join(curdir,'getchart.py')], check=True)
+print("获取曲绘、头像...")
+subprocess.run(['python', os.path.join(curdir,'getillustration.py')], check=True)
+subprocess.run(['python', os.path.join(curdir,'getavatar.py')], check=True)
 
-    print("done :)")
+print("初始化完成，请运行start.py启动程序 :)")

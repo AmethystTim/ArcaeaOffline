@@ -16,7 +16,7 @@ load_dotenv()
 app = Flask(__name__)
 app.config['SECRET_KEY'] = secrets.token_hex(16)
 init(autoreset=True)
-
+curdir = os.path.dirname(os.path.abspath(__file__))
 chartconstant = {}
 songlist = {}
 class_song = [
@@ -34,10 +34,10 @@ class2num = {
     'Eternal': 4,
 }
 
-with open(os.getenv('SONGLIST_PATH')) as file:
+with open(os.path.join(curdir, os.getenv('SONGLIST_PATH'))) as file:
     songlist = json.load(file)
 
-with open(os.getenv('CHARTCONSTANT_PATH')) as file:
+with open(os.path.join(curdir, os.getenv('CHARTCONSTANT_PATH'))) as file:
     chartconstant = json.load(file)
 
 def hash(password):
@@ -59,19 +59,19 @@ def calcRating(difficulty, score):
 def index():
     if session.get('username'):
         return redirect('/scores')
-    return send_from_directory('public','index.html')
+    return send_from_directory(os.path.join(curdir, 'public'),'index.html')
 
 @app.route('/<path:path>')
 def route(path):
-    if os.path.isfile(os.path.join('public',f'{path}.html')):
-        return send_from_directory('public',f'{path}.html')
+    if os.path.isfile(os.path.join(curdir, 'public',f'{path}.html')):
+        return send_from_directory(os.path.join(curdir, 'public'),f'{path}.html')
     else:
-        return send_from_directory('public',"404.html")
+        return send_from_directory(os.path.join(curdir, 'public'),"404.html")
     
 @app.route('/scripts/<path:file>')
 def scripts(file):
-    if os.path.isfile(os.path.join('scripts',f'{file}')):
-        return send_from_directory('scripts',f'{file}')
+    if os.path.isfile(os.path.join(curdir, 'scripts',f'{file}')):
+        return send_from_directory(os.path.join(curdir, 'scripts'),f'{file}')
     else:
         print(Fore.RED + f'Error: {file} not found')
         Fore.WHITE
@@ -79,8 +79,8 @@ def scripts(file):
     
 @app.route('/style/<path:file>')
 def stylesheets(file):
-    if os.path.isfile(os.path.join('style',f'{file}')):
-        return send_from_directory('style',f'{file}')
+    if os.path.isfile(os.path.join(curdir, 'style',f'{file}')):
+        return send_from_directory(os.path.join(curdir, 'style'),f'{file}')
     else:
         print(Fore.RED + f'Error: {file} not found')
         Fore.WHITE
@@ -88,8 +88,8 @@ def stylesheets(file):
     
 @app.route('/template/<path:file>', methods=['GET'])
 def templates(file):
-    if os.path.isfile(os.path.join('template',f'{file}.html')):
-        return send_from_directory('template',f'{file}.html')
+    if os.path.isfile(os.path.join(curdir, 'template',f'{file}.html')):
+        return send_from_directory(os.path.join(curdir, 'template'),f'{file}.html')
     else:
         print(Fore.RED + f'Error: {file}.html not found')
         Fore.WHITE
@@ -97,7 +97,7 @@ def templates(file):
     
 @app.route('/login', methods=['POST'])
 def login():
-    conn = sqlite3.connect(os.getenv('DB_PATH'))
+    conn = sqlite3.connect(os.path.join(curdir, os.getenv('DB_PATH')))
     cursor = conn.cursor()
     username = request.form['username']
     password = request.form['password']
@@ -123,7 +123,7 @@ def serve_favicon():
 
 @app.route('/register', methods=['POST'])
 def register():
-    conn = sqlite3.connect(os.getenv('DB_PATH'))
+    conn = sqlite3.connect(os.path.join(curdir, os.getenv('DB_PATH')))
     cursor = conn.cursor()
     username = request.form['username']
     password = request.form['password']
@@ -156,7 +156,7 @@ def get_username():
 def get_chart():
     rows = []
     if session.get('username'):
-        conn = sqlite3.connect(os.getenv('DB_PATH'))
+        conn = sqlite3.connect(os.path.join(curdir, os.getenv('DB_PATH')))
         cursor = conn.cursor()
         cursor.execute('''SELECT * from songs WHERE username = ?''', (session['username'],))
         rows = cursor.fetchall()
@@ -195,7 +195,7 @@ def update_chart():
         data['score'] = 0
     print(Fore.GREEN + f'{data}')
     Fore.WHITE
-    conn = sqlite3.connect(os.getenv('DB_PATH'))
+    conn = sqlite3.connect(os.path.join(curdir, os.getenv('DB_PATH')))
     cursor = conn.cursor()
     cursor.execute('''
         INSERT OR REPLACE INTO songs VALUES (?, ?, ?, ?);
@@ -211,7 +211,7 @@ def update_chart():
 def get_bests():
     if not session.get('username'):
         return jsonify({'success': False}), 400
-    conn = sqlite3.connect(os.getenv('DB_PATH'))
+    conn = sqlite3.connect(os.path.join(curdir, os.getenv('DB_PATH')))
     cursor = conn.cursor()
     cursor.execute('''SELECT * from songs WHERE username = ?''', (session['username'],))
     rows = cursor.fetchall()
@@ -235,13 +235,13 @@ def chat():
         return jsonify({'success': False}), 400
     data = request.get_json()
     if data.get('id') == 0:
-        df = pd.read_csv(os.getenv('RECOMMEND_PATH'))
+        df = pd.read_csv(os.path.join(curdir, os.getenv('RECOMMEND_PATH')))
         df = df.to_numpy().flatten().tolist()
         return jsonify({'message': df[random.randint(0, len(df)-1)]})
     elif data.get('id') == 1:
         if not session.get('username'):
             return jsonify({'success': False}), 400
-        conn = sqlite3.connect(os.getenv('DB_PATH'))
+        conn = sqlite3.connect(os.path.join(curdir, os.getenv('DB_PATH')))
         cursor = conn.cursor()
         cursor.execute('''SELECT * from songs WHERE username = ?''', (session['username'],))
         rows = cursor.fetchall()
@@ -263,7 +263,7 @@ def chat():
             id = random.randint(30, 39)
             return jsonify({'message': f"推荐这首{data[id]['name']}！目前的得分为{int(data[id]['score'])}，不过不要强推，小心手癖！"})
     elif data.get('id') == 2:
-        df = pd.read_csv(os.getenv('BIBLE_PATH'))
+        df = pd.read_csv(os.path.join(curdir, os.getenv('BIBLE_PATH')))
         df = df.to_numpy().flatten().tolist()
         return jsonify({'message': df[random.randint(0, len(df)-1)]})
     else:
@@ -279,7 +279,7 @@ def logout():
 def get_avatar():
     if not session.get('username'):
         return jsonify({'avatar': 'default.png'}), 400
-    conn = sqlite3.connect(os.getenv('DB_PATH'))
+    conn = sqlite3.connect(os.path.join(curdir, os.getenv('DB_PATH')))
     cursor = conn.cursor()
     cursor.execute('''SELECT * from custom WHERE username = ?''', (session['username'],))
     rows = cursor.fetchall()
@@ -301,7 +301,7 @@ def set_avatar():
     if not session.get('username'):
         return jsonify({'success': False}), 400
     data = request.get_json()
-    conn = sqlite3.connect(os.getenv('DB_PATH'))
+    conn = sqlite3.connect(os.path.join(curdir, os.getenv('DB_PATH')))
     cursor = conn.cursor()
     cursor.execute('''INSERT OR REPLACE INTO custom (username, avatar) VALUES (?, ?)''', (session['username'], data.get('avatar')))
     conn.commit()
@@ -312,7 +312,7 @@ def set_avatar():
 def get_p30():
     if not session.get('username'):
         return jsonify({'success': False}), 400
-    conn = sqlite3.connect(os.getenv('DB_PATH'))
+    conn = sqlite3.connect(os.path.join(curdir, os.getenv('DB_PATH')))
     cursor = conn.cursor()
     cursor.execute('''SELECT * from songs WHERE username = ?''', (session['username'],))
     rows = cursor.fetchall()
@@ -360,7 +360,7 @@ def get_max():
 def export_chart():
     if not session.get('username'):
         return jsonify({'success': False}), 400
-    conn = sqlite3.connect(os.getenv('DB_PATH'))
+    conn = sqlite3.connect(os.path.join(curdir, os.getenv('DB_PATH')))
     cursor = conn.cursor()
     cursor.execute('''SELECT * from songs WHERE username = ?''', (session['username'],))
     rows = cursor.fetchall()
@@ -372,7 +372,7 @@ def export_chart():
             'score': row[2],
         })
     df = pd.DataFrame(data)
-    df.to_csv(os.path.join(os.getenv('EXPORT_PATH'), f'{session["username"]}_chart_{datetime.date.today()}.csv'), index=False)
+    df.to_csv(os.path.join(curdir, os.path.join(os.getenv('EXPORT_PATH')), f'{session["username"]}_chart_{datetime.date.today()}.csv'), index=False)
     return jsonify({'success': True}), 200
 
 @app.route('/import_chart', methods=['POST'])
@@ -389,7 +389,7 @@ def import_chart():
         print(Fore.RED + f'Error: {e}')
         Fore.WHITE
         return jsonify({'success': False}), 500
-    conn = sqlite3.connect(os.getenv('DB_PATH'))
+    conn = sqlite3.connect(os.path.join(curdir, os.getenv('DB_PATH')))
     cursor = conn.cursor()
     for row in data:
         cursor.execute('''INSERT OR REPLACE INTO songs VALUES (?, ?, ?, ?)''', (row.get('id'), row.get('class'), row.get('score'), session['username']))
@@ -404,10 +404,10 @@ def apply_sorter():
     sorter = request.get_json()
     print(Fore.GREEN + f'{sorter}')
     Fore.WHITE
-    conn = sqlite3.connect(os.getenv('DB_PATH'))
+    conn = sqlite3.connect(os.path.join(curdir, os.getenv('DB_PATH')))
     cursor = conn.cursor()
     rows = []
-    conn = sqlite3.connect(os.getenv('DB_PATH'))
+    conn = sqlite3.connect(os.path.join(curdir, os.getenv('DB_PATH')))
     cursor = conn.cursor()
     cursor.execute('''SELECT * from songs WHERE username = ?''', (session['username'],))
     rows = cursor.fetchall()

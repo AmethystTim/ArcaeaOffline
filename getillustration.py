@@ -2,10 +2,10 @@ from urllib.parse import urljoin
 import requests
 from bs4 import BeautifulSoup
 import re
-
+import os
 # Arcaea 中文维基定数表
 url = 'https://arcwiki.mcd.blue/%E5%AE%9A%E6%95%B0%E8%A1%A8'
-
+curdir = os.path.abspath(os.path.dirname(__file__))
 response = requests.get(url)
 
 if response.status_code == 200:
@@ -20,9 +20,12 @@ if response.status_code == 200:
         match = re.search(r'Songs_([^/]+)\.jpg', url)
         if not match:
             continue
+        if os.path.exists(os.path.join(curdir, f"./assets/illustrations/{match.group(1)}.jpg")):
+            print(f"{match.group(1)}已存在，跳过")
+            continue
         response = requests.get(url)
         if response.status_code == 200:
-            with open(f"./assets/illustrations/{match.group(1)}.jpg", "wb") as file:
+            with open(os.path.join(curdir, f"./assets/illustrations/{match.group(1)}.jpg"), "wb") as file:
                 file.write(response.content)
         else:
             print(f"请求失败，状态码: {response.status_code}")
