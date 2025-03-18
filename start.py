@@ -103,6 +103,8 @@ def login():
     password = request.form['password']
     cursor.execute('''SELECT * from users WHERE username = ?''', (username,))
     rows = cursor.fetchall()
+    if len(rows) == 0:
+        return redirect('/')
     if hash(password) == rows[0][2]:
         session['username'] = username
         return redirect('/scores')
